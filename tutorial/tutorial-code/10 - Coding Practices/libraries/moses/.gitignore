@@ -1,0 +1,10 @@
+*.bat
+tsc*
+ldoc*
+telescope*
+LuaMin*
+*.ld
+luacov*
+*.exe
+*.dll
+test*

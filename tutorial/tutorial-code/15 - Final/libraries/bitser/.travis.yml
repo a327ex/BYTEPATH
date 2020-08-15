@@ -1,0 +1,26 @@
+language: python
+sudo: false
+
+env:
+  - LUA="luajit=2.0"
+
+before_install:
+  - pip install hererocks
+  - hererocks lua_install -r^ --$LUA
+  - export PATH=$PATH:$PWD/lua_install/bin
+
+install:
+  - luarocks install luacheck
+  - luarocks install busted
+  - luarocks install luacov
+  - luarocks install luacov-coveralls
+  - luarocks install middleclass
+  - wget https://bitbucket.org/bartbes/slither/raw/bbd85db19b19d9d14470b4fa7b73029b6c070fb0/slither.lua
+  - wget https://raw.githubusercontent.com/vrld/hump/038bc9025f1cb850355f4b073357b087b8122da9/class.lua
+
+script:
+  - luacheck --std max+busted bitser.lua spec --globals love
+  - busted --verbose --coverage
+
+after_success:
+  - luacov-coveralls --include bitser -e $TRAVIS_BUILD_DIR/lua_install
